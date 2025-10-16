@@ -8,6 +8,11 @@
 ## Как запустить
 
 1. Убедитесь, что установлен Python 3.8+  
-2. Установите зависимости (если нужно):
-   ```bash
+2. Установите, CustomTkinter 
+```bash
+   pip install customtkinter
+```
+3. Установите зависимости pytest (если нужно):
+```bash
    pip install pytest
+```
