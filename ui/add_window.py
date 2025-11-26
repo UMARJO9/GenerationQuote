@@ -56,14 +56,51 @@ class AddWindow(ctk.CTkToplevel):
 
     def save_quote(self):
         t = self.texts.get
-        text = self.text_field.get()
+        raw_text = self.text_field.get()
+        text = (raw_text or "").strip()
         author = (self.author_combo.get() or "").strip()
         categories = [title for title, cb in self.category_checks if cb.get() == 1]
 
-        if not text or not author:
-            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.message"))
+        # Получаем справочники
+        authors_ref = set(a.lower() for a in self.settings_repo.get_authors())
+        categories_ref = set(c.lower() for c in self.settings_repo.get_categories())
+
+        # Валидации текста
+        if not text:
+            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.missing_text"))
+            return
+        if len(text) < 5:
+            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.text_too_short"))
+            return
+        if len(text) > 600:
+            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.text_too_long"))
             return
 
+        # Валидации автора
+        if not author:
+            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.missing_author"))
+            return
+        if author.lower() not in authors_ref:
+            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.author_not_in_list"))
+            return
+
+        # Валидации категорий
+        if not categories:
+            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.missing_categories"))
+            return
+        invalid = [c for c in categories if c.lower() not in categories_ref]
+        if invalid:
+            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.category_not_in_list"))
+            return
+
+        # Проверка дубликатов (по тексту и автору, без учета регистра и пробелов)
+        norm = lambda s: (s or "").strip().lower()
+        for q in self.repo.get_all():
+            if norm(q.get("text")) == norm(text) and norm(q.get("author")) == norm(author):
+                messagebox.showwarning(t("add.validation_error.title"), t("add.validation_error.duplicate_quote"))
+                return
+
+        # Запись
         self.repo.add_quote(text, author, categories)
         self.repo.quotes = self.repo.get_all()
 

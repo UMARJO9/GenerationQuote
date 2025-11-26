@@ -21,7 +21,15 @@ DEFAULT_TEXTS = {
         },
         "validation_error": {
             "title": "Ошибка",
-            "message": "Текст и автор обязательны."
+            "message": "Текст и автор обязательны.",
+            "missing_text": "Введите текст цитаты.",
+            "missing_author": "Выберите автора из списка.",
+            "missing_categories": "Выберите хотя бы одну категорию.",
+            "text_too_short": "Текст слишком короткий.",
+            "text_too_long": "Текст слишком длинный.",
+            "author_not_in_list": "Укажите автора из настроек.",
+            "category_not_in_list": "Некоторые категории отсутствуют в настройках.",
+            "duplicate_quote": "Такая цитата с этим автором уже существует."
         },
         "save_success": {
             "title": "Готово",
@@ -74,4 +82,3 @@ def load_texts(file_path: str):
 def save_texts(file_path: str, texts: dict):
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(texts, f, ensure_ascii=False, indent=2)
-
