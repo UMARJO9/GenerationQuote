@@ -1,7 +1,6 @@
-import customtkinter as ctk
+﻿import customtkinter as ctk
 from tkinter import messagebox
 from ui.styles import COLORS
-from core.data_loader import load_quotes, save_quotes
 from ui.components.field_label import FieldLabel
 from ui.components.text_field import TextField
 from ui.components.input_field import InputField
@@ -47,17 +46,9 @@ class AddWindow(ctk.CTkToplevel):
         if not text or not author:
             messagebox.showerror("Ошибка", "Поля «Текст» и «Автор» обязательны.")
             return
-
-        quotes = load_quotes(self.repo.file_path)
-        new_quote = {
-            "id": f"q-{len(quotes) + 1:03}",
-            "text": text,
-            "author": author,
-            "categories": categories
-        }
-        quotes.append(new_quote)
-        save_quotes(self.repo.file_path, quotes)
-        self.repo.quotes = quotes
+        self.repo.add_quote(text, author, categories)
+        self.repo.quotes = self.repo.get_all()
 
         messagebox.showinfo("✅ Успех", "Цитата добавлена!")
         self.destroy()
+

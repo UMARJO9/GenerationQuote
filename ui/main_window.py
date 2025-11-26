@@ -1,9 +1,8 @@
-import customtkinter as ctk
+﻿import customtkinter as ctk
 from core.repository import QuoteRepository
 from core.randomizer import random_quote
 from ui.add_window import AddWindow
 from ui.styles import COLORS, FONTS, BUTTON_STYLE
-from core.data_loader import load_quotes
 
 class MainWindow(ctk.CTk):
     def __init__(self):
@@ -67,10 +66,9 @@ class MainWindow(ctk.CTk):
 
     def generate_quote(self):
         try:
-            self.repo.quotes = self.repo.get_all()
-            self.repo.quotes = load_quotes(self.repo.file_path)
             quote = random_quote(self.repo.quotes)
-            text = f"“{quote['text']}”\n\n— {quote['author']}"
+            text = f"\"{quote['text']}\"\n\n- {quote['author']}"
+
             self.quote_label.configure(text=text)
         except ValueError as e:
             self.quote_label.configure(text=str(e))
@@ -78,5 +76,7 @@ class MainWindow(ctk.CTk):
     def open_add_window(self):
         win = AddWindow(self.repo)
         self.wait_window(win)
-        self.repo.quotes = load_quotes(self.repo.file_path)
+        self.repo.quotes = self.repo.get_all()
+
+
 
