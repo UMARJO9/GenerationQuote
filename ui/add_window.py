@@ -6,6 +6,7 @@ from ui.components.text_field import TextField
 from ui.components.save_button import SaveButton
 from core.settings_repository import SettingsRepository
 from core.texts_repository import TextsRepository
+from ui.settings_window import SettingsWindow
 
 
 class AddWindow(ctk.CTkToplevel):
@@ -28,6 +29,7 @@ class AddWindow(ctk.CTkToplevel):
             height=440
         )
         frame.place(relx=0.5, rely=0.5, anchor="center")
+        self.form_frame = frame
 
         # Текст цитаты
         FieldLabel(frame, t("add.fields.quote")).pack(pady=(10, 4))
@@ -38,7 +40,7 @@ class AddWindow(ctk.CTkToplevel):
         FieldLabel(frame, t("add.fields.author")).pack(pady=(8, 4))
         self.settings_repo.reload()
         authors = self.settings_repo.get_authors()
-        self.author_combo = ctk.CTkComboBox(frame, width=420, values=authors)
+        self.author_combo = ctk.CTkComboBox(frame, width=420, values=authors, state="readonly")
         self.author_combo.pack()
 
         # Множественный выбор категорий
@@ -78,19 +80,39 @@ class AddWindow(ctk.CTkToplevel):
 
         # Валидации автора
         if not author:
-            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.missing_author"))
+            if messagebox.askyesno(t("add.prompts.open_settings.title"), t("add.prompts.open_settings.open_settings_author")):
+                win = SettingsWindow(self.settings_repo)
+                self.wait_window(win)
+                self.refresh_authors()
+            else:
+                messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.missing_author"))
             return
         if author.lower() not in authors_ref:
-            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.author_not_in_list"))
+            if messagebox.askyesno(t("add.prompts.open_settings.title"), t("add.prompts.open_settings.open_settings_author")):
+                win = SettingsWindow(self.settings_repo)
+                self.wait_window(win)
+                self.refresh_authors()
+            else:
+                messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.author_not_in_list"))
             return
 
         # Валидации категорий
         if not categories:
-            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.missing_categories"))
+            if messagebox.askyesno(t("add.prompts.open_settings.title"), t("add.prompts.open_settings.open_settings_category")):
+                win = SettingsWindow(self.settings_repo)
+                self.wait_window(win)
+                self.refresh_categories()
+            else:
+                messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.missing_categories"))
             return
         invalid = [c for c in categories if c.lower() not in categories_ref]
         if invalid:
-            messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.category_not_in_list"))
+            if messagebox.askyesno(t("add.prompts.open_settings.title"), t("add.prompts.open_settings.open_settings_category")):
+                win = SettingsWindow(self.settings_repo)
+                self.wait_window(win)
+                self.refresh_categories()
+            else:
+                messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.category_not_in_list"))
             return
 
         # Проверка дубликатов (по тексту и автору, без учета регистра и пробелов)
@@ -106,6 +128,34 @@ class AddWindow(ctk.CTkToplevel):
 
         messagebox.showinfo(t("add.save_success.title"), t("add.save_success.message"))
         self.destroy()
+
+    def refresh_authors(self):
+        # Reload authors and repopulate combobox
+        self.settings_repo.reload()
+        authors = self.settings_repo.get_authors()
+        try:
+            self.author_combo.configure(values=authors)
+            self.author_combo.set("")
+        except Exception:
+            # Recreate if needed
+            self.author_combo.destroy()
+            self.author_combo = ctk.CTkComboBox(self.form_frame, width=420, values=authors, state="readonly")
+            self.author_combo.pack()
+
+    def refresh_categories(self):
+        # Reload categories and rebuild checkboxes
+        self.settings_repo.reload()
+        categories = self.settings_repo.get_categories()
+        try:
+            for _, cb in self.category_checks:
+                cb.destroy()
+        except Exception:
+            pass
+        self.category_checks = []
+        for idx, title in enumerate(categories):
+            cb = ctk.CTkCheckBox(self.categories_box, text=title, font=FONTS["base"])
+            cb.pack(anchor="w", pady=(6 if idx == 0 else 0, 6), padx=8)
+            self.category_checks.append((title, cb))
 
 
 
