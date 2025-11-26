@@ -1,11 +1,11 @@
-import customtkinter as ctk
+﻿import customtkinter as ctk
 from ui.styles import COLORS, BUTTON_STYLE
 
 class SaveButton(ctk.CTkButton):
-    def __init__(self, parent, command):
+    def __init__(self, parent, command, text: str = "Сохранить"):
         super().__init__(
             parent,
-            text="💾 Сохранить",
+            text=text,
             fg_color=COLORS["accent"],
             hover_color=COLORS["accent_hover"],
             text_color="white",
@@ -13,3 +13,5 @@ class SaveButton(ctk.CTkButton):
             **BUTTON_STYLE,
             command=command
         )
+
+
