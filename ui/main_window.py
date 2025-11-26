@@ -3,6 +3,8 @@ from core.repository import QuoteRepository
 from core.randomizer import random_quote
 from ui.add_window import AddWindow
 from ui.styles import COLORS, FONTS, BUTTON_STYLE
+from core.settings_repository import SettingsRepository
+from ui.settings_window import SettingsWindow
 
 class MainWindow(ctk.CTk):
     def __init__(self):
@@ -12,6 +14,7 @@ class MainWindow(ctk.CTk):
         self.configure(fg_color=COLORS["background"])
 
         self.repo = QuoteRepository()
+        self.settings_repo = SettingsRepository()
 
         top_bar = ctk.CTkFrame(
             self,
@@ -46,6 +49,19 @@ class MainWindow(ctk.CTk):
         )
         add_btn.place(x=400, y=12)
 
+        settings_btn = ctk.CTkButton(
+            top_bar,
+            text="⚙",
+            fg_color=COLORS["panel"],
+            hover_color="#e5e7eb",
+            text_color=COLORS["text"],
+            width=40,
+            height=36,
+            corner_radius=8,
+            command=self.open_settings
+        )
+        settings_btn.place(x=560, y=12)
+
         self.quote_label = ctk.CTkLabel(
             self,
             text="Нажмите «Сгенерировать» для получения цитаты",
@@ -77,6 +93,10 @@ class MainWindow(ctk.CTk):
         win = AddWindow(self.repo)
         self.wait_window(win)
         self.repo.quotes = self.repo.get_all()
+
+    def open_settings(self):
+        win = SettingsWindow(self.settings_repo)
+        self.wait_window(win)
 
 
 
