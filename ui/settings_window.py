@@ -20,6 +20,7 @@ class SettingsWindow(ctk.CTkToplevel):
             height=360
         )
         container.place(relx=0.5, rely=0.5, anchor="center")
+        self.container = container
 
         # Authors section
         authors_label = ctk.CTkLabel(container, text="Авторы", font=("Segoe UI Semibold", 12), text_color=COLORS["text"])        
@@ -58,8 +59,22 @@ class SettingsWindow(ctk.CTkToplevel):
 
     def refresh_lists(self):
         self.repo.reload()
-        self.author_combo.configure(values=self.repo.get_authors())
-        self.category_combo.configure(values=self.repo.get_categories())
+        authors = self.repo.get_authors()
+        categories = self.repo.get_categories()
+        # Полное пересоздание комбобоксов, чтобы меню наверняка обновилось
+        try:
+            self.author_combo.destroy()
+        except Exception:
+            pass
+        self.author_combo = ctk.CTkComboBox(self.container, width=240, values=authors)
+        self.author_combo.place(x=24, y=92)
+
+        try:
+            self.category_combo.destroy()
+        except Exception:
+            pass
+        self.category_combo = ctk.CTkComboBox(self.container, width=240, values=categories)
+        self.category_combo.place(x=24, y=224)
 
     def add_author(self):
         name = self.author_entry.get().strip()
@@ -102,4 +117,3 @@ class SettingsWindow(ctk.CTkToplevel):
             self.refresh_lists()
         else:
             messagebox.showwarning("Внимание", "Категория не найдена.")
-
