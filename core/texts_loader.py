@@ -82,7 +82,6 @@ def load_texts(file_path: str):
             data = json.load(f)
             return data
         except json.JSONDecodeError:
-            # Если файл повреждён, вернём дефолтные строки
             return DEFAULT_TEXTS
 
 

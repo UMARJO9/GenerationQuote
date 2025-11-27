@@ -11,7 +11,7 @@ class SettingsWindow(ctk.CTkToplevel):
         t = self.texts.get
         self.title(t("settings.title"))
         self.geometry("600x420")
-        self.configure(fg_color=COLORS["background"])        
+        self.configure(fg_color=COLORS["background"])
         self.repo = repo
         self.resizable(False, False)
         self.transient(self.master)
@@ -29,8 +29,7 @@ class SettingsWindow(ctk.CTkToplevel):
         container.place(relx=0.5, rely=0.5, anchor="center")
         self.container = container
 
-        # Authors section
-        authors_label = ctk.CTkLabel(container, text=t("settings.sections.authors"), font=("Segoe UI Semibold", 12), text_color=COLORS["text"])        
+        authors_label = ctk.CTkLabel(container, text=t("settings.sections.authors"), font=("Segoe UI Semibold", 12), text_color=COLORS["text"])
         authors_label.place(x=24, y=18)
 
         self.author_entry = ctk.CTkEntry(container, width=240, font=FONTS["base"], fg_color=COLORS["panel"], text_color="#1e293b")
@@ -55,8 +54,7 @@ class SettingsWindow(ctk.CTkToplevel):
         del_author_btn = ctk.CTkButton(container, text=t("settings.buttons.delete"), width=110, command=self.delete_author, fg_color=COLORS["accent"], hover_color=COLORS["accent_hover"], text_color="white", **BUTTON_STYLE)
         del_author_btn.place(x=276, y=90)
 
-        # Categories section
-        categories_label = ctk.CTkLabel(container, text=t("settings.sections.categories"), font=("Segoe UI Semibold", 12), text_color=COLORS["text"])        
+        categories_label = ctk.CTkLabel(container, text=t("settings.sections.categories"), font=("Segoe UI Semibold", 12), text_color=COLORS["text"])
         categories_label.place(x=24, y=150)
 
         self.category_entry = ctk.CTkEntry(container, width=240, font=FONTS["base"], fg_color=COLORS["panel"], text_color="#1e293b")
@@ -88,7 +86,6 @@ class SettingsWindow(ctk.CTkToplevel):
         self.repo.reload()
         authors = self.repo.get_authors()
         categories = self.repo.get_categories()
-        # Полное пересоздание комбобоксов, чтобы меню наверняка обновилось
         try:
             self.author_combo.destroy()
         except Exception:

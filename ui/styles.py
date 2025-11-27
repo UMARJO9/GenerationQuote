@@ -1,5 +1,3 @@
-# 🎨 Desktop style palette
-
 COLORS = {
     "background": "#f3f4f6",
     "panel": "#ffffff",

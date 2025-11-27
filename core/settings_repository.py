@@ -6,14 +6,12 @@ class SettingsRepository:
         self.file_path = file_path
         self.settings = load_settings(file_path)
 
-    # ----- getters -----
     def get_authors(self):
         return list(self.settings.get("authors", []))
 
     def get_categories(self):
         return list(self.settings.get("categories", []))
 
-    # ----- authors -----
     def add_author(self, name: str):
         name = (name or "").strip()
         if not name:
@@ -35,7 +33,6 @@ class SettingsRepository:
             save_settings(self.file_path, self.settings)
         return changed
 
-    # ----- categories -----
     def add_category(self, title: str):
         title = (title or "").strip()
         if not title:
@@ -57,7 +54,6 @@ class SettingsRepository:
             save_settings(self.file_path, self.settings)
         return changed
 
-    # ----- reload -----
     def reload(self):
         self.settings = load_settings(self.file_path)
         return self.settings

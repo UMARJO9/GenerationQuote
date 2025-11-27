@@ -24,7 +24,6 @@ class MainWindow(ctk.CTk):
         self.selected_authors: set[str] = set()
         self.selected_categories: set[str] = set()
 
-        # Фильтры (левая карточка, фиксированная высота)
         filters_container = ctk.CTkFrame(
             self,
             fg_color=COLORS["panel"],
@@ -77,7 +76,6 @@ class MainWindow(ctk.CTk):
 
         self.build_filter_checkboxes()
 
-        # Кнопки (правая карточка, такая же высота)
         actions_box = ctk.CTkFrame(
             self,
             fg_color=COLORS["panel"],
@@ -156,7 +154,6 @@ class MainWindow(ctk.CTk):
         )
         footer.place(relx=0.5, rely=0.96, anchor="center")
 
-        # Прокрутка только внутри блока фильтров
         self.bind_all("<MouseWheel>", self._on_mousewheel_filters, add="+")
 
     def generate_quote(self):
@@ -189,7 +186,6 @@ class MainWindow(ctk.CTk):
         self.refresh_filters()
 
     def build_filter_checkboxes(self):
-        # Authors
         old_authors = set(self.selected_authors)
         for child in self.authors_box.winfo_children():
             child.destroy()
@@ -207,7 +203,6 @@ class MainWindow(ctk.CTk):
                 cb.select()
                 self.selected_authors.add(name)
 
-        # Categories
         old_categories = set(self.selected_categories)
         for child in self.categories_box.winfo_children():
             child.destroy()

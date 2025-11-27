@@ -1,11 +1,12 @@
 import customtkinter as ctk
 from ui.styles import COLORS, FONTS
 
+
 class TextField(ctk.CTkFrame):
     def __init__(self, parent, width=420, height=90):
         super().__init__(
             parent,
-            fg_color="#d1d5db",    # рамка
+            fg_color="#d1d5db",
             corner_radius=8
         )
 

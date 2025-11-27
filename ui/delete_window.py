@@ -71,7 +71,6 @@ class DeleteWindow(ctk.CTkToplevel):
             if len(preview) > 60:
                 preview = preview[:57] + "..."
             label = f"{q.get('author','?')} — {preview}"
-            # Ensure uniqueness if previews clash
             while label in display:
                 label += " "
             display[label] = q.get("id")
