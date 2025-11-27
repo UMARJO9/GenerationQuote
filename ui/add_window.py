@@ -20,6 +20,10 @@ class AddWindow(ctk.CTkToplevel):
         self.repo = repo
         self.settings_repo = settings_repo or SettingsRepository()
         self.resizable(False, False)
+        self.transient(self.master)
+        self.grab_set()
+        self.lift()
+        self.focus_force()
 
         frame = ctk.CTkFrame(
             self,

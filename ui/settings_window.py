@@ -14,6 +14,10 @@ class SettingsWindow(ctk.CTkToplevel):
         self.configure(fg_color=COLORS["background"])        
         self.repo = repo
         self.resizable(False, False)
+        self.transient(self.master)
+        self.grab_set()
+        self.lift()
+        self.focus_force()
 
         container = ctk.CTkFrame(
             self,

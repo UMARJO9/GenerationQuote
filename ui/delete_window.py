@@ -11,6 +11,10 @@ class DeleteWindow(ctk.CTkToplevel):
         self.geometry("520x240")
         self.configure(fg_color=COLORS["background"])
         self.resizable(False, False)
+        self.transient(self.master)
+        self.grab_set()
+        self.lift()
+        self.focus_force()
 
         container = ctk.CTkFrame(
             self,
@@ -84,6 +88,34 @@ class DeleteWindow(ctk.CTkToplevel):
         if messagebox.askyesno("Удаление", "Удалить выбранную цитату?"):
             if self.repo.delete_quote(quote_id):
                 messagebox.showinfo("Готово", "Цитата удалена.")
-                self.destroy()
+                self._reload_quotes()
             else:
                 messagebox.showerror("Ошибка", "Не удалось удалить цитату.")
+
+    def _reload_quotes(self):
+        self.repo.quotes = self.repo.get_all()
+        self.quote_map = self._build_display_map()
+        values = list(self.quote_map.keys()) or ["(нет цитат)"]
+        state = "readonly" if values and values[0] != "(нет цитат)" else "disabled"
+        try:
+            self.combo.configure(values=values, state=state)
+        except Exception:
+            self.combo.destroy()
+            self.combo = ctk.CTkComboBox(
+                self,
+                width=430,
+                values=values,
+                state=state,
+                fg_color=COLORS["panel"],
+                button_color=COLORS["accent"],
+                button_hover_color=COLORS["accent_hover"],
+                dropdown_fg_color=COLORS["panel"],
+                dropdown_text_color=COLORS["text"],
+                text_color=COLORS["text"],
+                font=FONTS["base"]
+            )
+            self.combo.place(x=22, y=56)
+        if values and values[0] != "(нет цитат)":
+            self.combo.set(values[0])
+        else:
+            self.combo.set("(нет цитат)")
