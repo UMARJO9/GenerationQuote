@@ -19,3 +19,11 @@ class QuoteRepository:
         self.quotes.append(new_quote)
         save_quotes(self.file_path, self.quotes)
         return new_quote
+
+    def delete_quote(self, quote_id: str) -> bool:
+        before = len(self.quotes)
+        self.quotes = [q for q in self.quotes if q.get("id") != quote_id]
+        if len(self.quotes) < before:
+            save_quotes(self.file_path, self.quotes)
+            return True
+        return False

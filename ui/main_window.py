@@ -6,6 +6,7 @@ from ui.styles import COLORS, FONTS, BUTTON_STYLE
 from core.settings_repository import SettingsRepository
 from ui.settings_window import SettingsWindow
 from core.texts_repository import TextsRepository
+from ui.delete_window import DeleteWindow
 
 
 class MainWindow(ctk.CTk):
@@ -98,7 +99,19 @@ class MainWindow(ctk.CTk):
             **BUTTON_STYLE,
             command=self.open_add_window
         )
-        add_btn.place(relx=0.5, y=38, anchor="center")
+        add_btn.place(relx=0.5, y=32, anchor="center")
+
+        delete_btn = ctk.CTkButton(
+            actions_box,
+            text="Удалить",
+            fg_color="#ef4444",
+            hover_color="#dc2626",
+            text_color="white",
+            width=150,
+            **BUTTON_STYLE,
+            command=self.open_delete_window
+        )
+        delete_btn.place(relx=0.5, y=72, anchor="center")
 
         settings_btn = ctk.CTkButton(
             actions_box,
@@ -111,7 +124,7 @@ class MainWindow(ctk.CTk):
             corner_radius=8,
             command=self.open_settings
         )
-        settings_btn.place(relx=0.5, y=98, anchor="center")
+        settings_btn.place(relx=0.5, y=118, anchor="center")
 
         self.quote_label = ctk.CTkLabel(
             self,
@@ -160,6 +173,12 @@ class MainWindow(ctk.CTk):
 
     def open_add_window(self):
         win = AddWindow(self.repo, self.settings_repo)
+        self.wait_window(win)
+        self.repo.quotes = self.repo.get_all()
+        self.refresh_filters()
+
+    def open_delete_window(self):
+        win = DeleteWindow(self.repo)
         self.wait_window(win)
         self.repo.quotes = self.repo.get_all()
         self.refresh_filters()
