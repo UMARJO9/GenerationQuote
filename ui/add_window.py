@@ -1,4 +1,4 @@
-﻿import customtkinter as ctk
+import customtkinter as ctk
 from tkinter import messagebox
 from ui.styles import COLORS, FONTS
 from ui.components.field_label import FieldLabel
@@ -31,26 +31,42 @@ class AddWindow(ctk.CTkToplevel):
         frame.place(relx=0.5, rely=0.5, anchor="center")
         self.form_frame = frame
 
-        # Текст цитаты
+        # ����� ����
         FieldLabel(frame, t("add.fields.quote")).pack(pady=(10, 4))
         self.text_field = TextField(frame)
         self.text_field.pack(pady=(0, 8))
 
-        # Автор из настроек
+        # ���� �� ����஥�
         FieldLabel(frame, t("add.fields.author")).pack(pady=(8, 4))
         self.settings_repo.reload()
         authors = self.settings_repo.get_authors()
-        self.author_combo = ctk.CTkComboBox(frame, width=420, values=authors, state="readonly")
+        self.author_combo = ctk.CTkComboBox(
+            frame,
+            width=420,
+            values=authors,
+            state="readonly",
+            fg_color=COLORS["panel"],
+            button_color=COLORS["accent"],
+            button_hover_color=COLORS["accent_hover"],
+            dropdown_fg_color=COLORS["panel"],
+            dropdown_text_color=COLORS["text"],
+            text_color=COLORS["text"]
+        )
         self.author_combo.pack()
 
-        # Множественный выбор категорий
+        # ������⢥��� �롮� ��⥣�਩
         FieldLabel(frame, t("add.fields.categories")).pack(pady=(8, 4))
         categories = self.settings_repo.get_categories()
         self.categories_box = ctk.CTkScrollableFrame(frame, width=420, height=150, fg_color=COLORS["panel"], corner_radius=8)
         self.categories_box.pack()
         self.category_checks = []
         for idx, title in enumerate(categories):
-            cb = ctk.CTkCheckBox(self.categories_box, text=title, font=FONTS["base"])
+            cb = ctk.CTkCheckBox(
+                self.categories_box,
+                text=title,
+                font=FONTS["base"],
+                text_color=COLORS["text"]
+            )
             cb.pack(anchor="w", pady=(6 if idx == 0 else 0, 6), padx=8)
             self.category_checks.append((title, cb))
 
@@ -63,11 +79,11 @@ class AddWindow(ctk.CTkToplevel):
         author = (self.author_combo.get() or "").strip()
         categories = [title for title, cb in self.category_checks if cb.get() == 1]
 
-        # Получаем справочники
+        # ����砥� �ࠢ�筨��
         authors_ref = set(a.lower() for a in self.settings_repo.get_authors())
         categories_ref = set(c.lower() for c in self.settings_repo.get_categories())
 
-        # Валидации текста
+        # ������樨 ⥪��
         if not text:
             messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.missing_text"))
             return
@@ -78,7 +94,7 @@ class AddWindow(ctk.CTkToplevel):
             messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.text_too_long"))
             return
 
-        # Валидации автора
+        # ������樨 ����
         if not author:
             if messagebox.askyesno(t("add.prompts.open_settings.title"), t("add.prompts.open_settings.open_settings_author")):
                 win = SettingsWindow(self.settings_repo)
@@ -96,7 +112,7 @@ class AddWindow(ctk.CTkToplevel):
                 messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.author_not_in_list"))
             return
 
-        # Валидации категорий
+        # ������樨 ��⥣�਩
         if not categories:
             if messagebox.askyesno(t("add.prompts.open_settings.title"), t("add.prompts.open_settings.open_settings_category")):
                 win = SettingsWindow(self.settings_repo)
@@ -115,14 +131,14 @@ class AddWindow(ctk.CTkToplevel):
                 messagebox.showerror(t("add.validation_error.title"), t("add.validation_error.category_not_in_list"))
             return
 
-        # Проверка дубликатов (по тексту и автору, без учета регистра и пробелов)
+        # �஢�ઠ �㡫���⮢ (�� ⥪��� � �����, ��� ��� ॣ���� � �஡����)
         norm = lambda s: (s or "").strip().lower()
         for q in self.repo.get_all():
             if norm(q.get("text")) == norm(text) and norm(q.get("author")) == norm(author):
                 messagebox.showwarning(t("add.validation_error.title"), t("add.validation_error.duplicate_quote"))
                 return
 
-        # Запись
+        # ������
         self.repo.add_quote(text, author, categories)
         self.repo.quotes = self.repo.get_all()
 
@@ -139,7 +155,18 @@ class AddWindow(ctk.CTkToplevel):
         except Exception:
             # Recreate if needed
             self.author_combo.destroy()
-            self.author_combo = ctk.CTkComboBox(self.form_frame, width=420, values=authors, state="readonly")
+            self.author_combo = ctk.CTkComboBox(
+                self.form_frame,
+                width=420,
+                values=authors,
+                state="readonly",
+                fg_color=COLORS["panel"],
+                button_color=COLORS["accent"],
+                button_hover_color=COLORS["accent_hover"],
+                dropdown_fg_color=COLORS["panel"],
+                dropdown_text_color=COLORS["text"],
+                text_color=COLORS["text"]
+            )
             self.author_combo.pack()
 
     def refresh_categories(self):
@@ -153,9 +180,11 @@ class AddWindow(ctk.CTkToplevel):
             pass
         self.category_checks = []
         for idx, title in enumerate(categories):
-            cb = ctk.CTkCheckBox(self.categories_box, text=title, font=FONTS["base"])
+            cb = ctk.CTkCheckBox(
+                self.categories_box,
+                text=title,
+                font=FONTS["base"],
+                text_color=COLORS["text"]
+            )
             cb.pack(anchor="w", pady=(6 if idx == 0 else 0, 6), padx=8)
             self.category_checks.append((title, cb))
-
-
-

@@ -79,7 +79,7 @@ class MainWindow(ctk.CTk):
         footer = ctk.CTkLabel(
             self,
             text=t("app.footer"),
-            text_color="#6b7280",
+            text_color=COLORS["text"],
             font=FONTS["small"]
         )
         footer.place(relx=0.5, rely=0.96, anchor="center")

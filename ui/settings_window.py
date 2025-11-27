@@ -35,7 +35,17 @@ class SettingsWindow(ctk.CTkToplevel):
         add_author_btn = ctk.CTkButton(container, text=t("settings.buttons.add"), width=110, command=self.add_author, fg_color=COLORS["secondary"], hover_color=COLORS["secondary_hover"], text_color="white", **BUTTON_STYLE)
         add_author_btn.place(x=276, y=46)
 
-        self.author_combo = ctk.CTkComboBox(container, width=240, values=self.repo.get_authors())
+        self.author_combo = ctk.CTkComboBox(
+            container,
+            width=240,
+            values=self.repo.get_authors(),
+            fg_color=COLORS["panel"],
+            button_color=COLORS["accent"],
+            button_hover_color=COLORS["accent_hover"],
+            dropdown_fg_color=COLORS["panel"],
+            dropdown_text_color=COLORS["text"],
+            text_color=COLORS["text"]
+        )
         self.author_combo.place(x=24, y=92)
 
         del_author_btn = ctk.CTkButton(container, text=t("settings.buttons.delete"), width=110, command=self.delete_author, fg_color=COLORS["accent"], hover_color=COLORS["accent_hover"], text_color="white", **BUTTON_STYLE)
@@ -51,7 +61,17 @@ class SettingsWindow(ctk.CTkToplevel):
         add_category_btn = ctk.CTkButton(container, text=t("settings.buttons.add"), width=110, command=self.add_category, fg_color=COLORS["secondary"], hover_color=COLORS["secondary_hover"], text_color="white", **BUTTON_STYLE)
         add_category_btn.place(x=276, y=178)
 
-        self.category_combo = ctk.CTkComboBox(container, width=240, values=self.repo.get_categories())
+        self.category_combo = ctk.CTkComboBox(
+            container,
+            width=240,
+            values=self.repo.get_categories(),
+            fg_color=COLORS["panel"],
+            button_color=COLORS["accent"],
+            button_hover_color=COLORS["accent_hover"],
+            dropdown_fg_color=COLORS["panel"],
+            dropdown_text_color=COLORS["text"],
+            text_color=COLORS["text"]
+        )
         self.category_combo.place(x=24, y=224)
 
         del_category_btn = ctk.CTkButton(container, text=t("settings.buttons.delete"), width=110, command=self.delete_category, fg_color=COLORS["accent"], hover_color=COLORS["accent_hover"], text_color="white", **BUTTON_STYLE)
@@ -69,14 +89,34 @@ class SettingsWindow(ctk.CTkToplevel):
             self.author_combo.destroy()
         except Exception:
             pass
-        self.author_combo = ctk.CTkComboBox(self.container, width=240, values=authors)
+        self.author_combo = ctk.CTkComboBox(
+            self.container,
+            width=240,
+            values=authors,
+            fg_color=COLORS["panel"],
+            button_color=COLORS["accent"],
+            button_hover_color=COLORS["accent_hover"],
+            dropdown_fg_color=COLORS["panel"],
+            dropdown_text_color=COLORS["text"],
+            text_color=COLORS["text"]
+        )
         self.author_combo.place(x=24, y=92)
 
         try:
             self.category_combo.destroy()
         except Exception:
             pass
-        self.category_combo = ctk.CTkComboBox(self.container, width=240, values=categories)
+        self.category_combo = ctk.CTkComboBox(
+            self.container,
+            width=240,
+            values=categories,
+            fg_color=COLORS["panel"],
+            button_color=COLORS["accent"],
+            button_hover_color=COLORS["accent_hover"],
+            dropdown_fg_color=COLORS["panel"],
+            dropdown_text_color=COLORS["text"],
+            text_color=COLORS["text"]
+        )
         self.category_combo.place(x=24, y=224)
 
     def add_author(self):
